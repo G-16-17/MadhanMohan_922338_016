@@ -1,0 +1,10 @@
+apiVersion : v1
+kind : Pod
+metadata : 
+ name : handson
+spec : 
+ containers : 
+ - name : handson
+   image : hp05/docker_demo
+    
+  

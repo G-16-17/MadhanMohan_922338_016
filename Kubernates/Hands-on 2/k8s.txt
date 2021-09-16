@@ -1,0 +1,124 @@
+C:\Users\hp\Desktop\DockerDemo>docker build
+"docker build" requires exactly 1 argument.
+See 'docker build --help'.
+
+Usage:  docker build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+C:\Users\hp\Desktop\DockerDemo>docker build --help
+
+Usage:  docker build [OPTIONS] PATH | URL | -
+
+Build an image from a Dockerfile
+
+Options:
+      --add-host list           Add a custom host-to-IP mapping (host:ip)
+      --build-arg list          Set build-time variables
+      --cache-from strings      Images to consider as cache sources
+      --disable-content-trust   Skip image verification (default true)
+  -f, --file string             Name of the Dockerfile (Default is
+                                'PATH/Dockerfile')
+      --iidfile string          Write the image ID to the file
+      --isolation string        Container isolation technology
+      --label list              Set metadata for an image
+      --network string          Set the networking mode for the RUN
+                                instructions during build (default "default")
+      --no-cache                Do not use cache when building the image
+  -o, --output stringArray      Output destination (format:
+                                type=local,dest=path)
+      --platform string         Set platform if server is multi-platform
+                                capable
+      --progress string         Set type of progress output (auto, plain,
+                                tty). Use plain to show container output
+                                (default "auto")
+      --pull                    Always attempt to pull a newer version of
+                                the image
+  -q, --quiet                   Suppress the build output and print image
+                                ID on success
+      --secret stringArray      Secret file to expose to the build (only
+                                if BuildKit enabled):
+                                id=mysecret,src=/local/secret
+      --ssh stringArray         SSH agent socket or keys to expose to the
+                                build (only if BuildKit enabled) (format:
+                                default|<id>[=<socket>|<key>[,<key>]])
+  -t, --tag list                Name and optionally a tag in the
+                                'name:tag' format
+      --target string           Set the target build stage to build.
+
+C:\Users\hp\Desktop\DockerDemo>docker images
+REPOSITORY                    TAG       IMAGE ID       CREATED         SIZE
+gcr.io/k8s-minikube/kicbase   v0.0.26   b0c9ec980b3d   1 day ago     1.08GB
+nginx                         1.17.5    540a289bab6c   3 months ago   126MB
+
+
+C:\Users\hp\Desktop\DockerDemo>docker build -f Dockerfile -t DockerDemo
+invalid argument "DockerDemo" for "-t, --tag" flag: invalid reference format: repository name must be lowercase
+See 'docker build --help'.
+
+C:\Users\hp\Desktop\DockerDemo>docker build -f Dockerfile -t docker-demo .
+[+] Building 5.6s (8/8) FINISHED
+ => [internal] load build definition from Dockerfile                                                               1.2s
+ => => transferring dockerfile: 31B                                                                                0.3s
+ => [internal] load .dockerignore                                                                                  0.9s
+ => => transferring context: 2B                                                                                    0.1s
+ => [internal] load metadata for docker.io/library/openjdk:8                                                       3.4s
+ => [auth] library/openjdk:pull token for registry-1.docker.io                                                     0.0s
+ => [internal] load build context                                                                                  0.4s
+ => => transferring context: 72B                                                                                   0.0s
+ => [1/2] FROM docker.io/library/openjdk:8@sha256:4af8aa613bcad1e9dd24978a9cec9e9fd9641a2789e12bfa3b49234da2b01b2  0.0s
+ => CACHED [2/2] ADD target/docker-demo.jar docker-demo.jar                                                        0.0s
+ => exporting to image                                                                                             0.6s
+ => => exporting layers                                                                                            0.0s
+ => => writing image sha256:0dc4dc7c1b2395f439ecf786ad2c553cbd1e644a45c692f6abde5c198d37300d                       0.1s
+ => => naming to docker.io/library/docker-demo                                                                     0.1s
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+
+C:\Users\hp\Desktop\DockerDemo>docker images
+REPOSITORY                    TAG       IMAGE ID       CREATED         SIZE
+docker-demo                   latest    0dc4dc7c1b23   1 hours ago     543MB
+gcr.io/k8s-minikube/kicbase   v0.0.26   b0c9ec980b3d   8 days ago     1.08GB
+nginx                         1.17.5    540a289bab6c   3 months ago   126MB
+
+C:\Users\hp\Desktop\DockerDemo>docker tag docker-demo hp05/docker_demo
+
+C:\Users\hp\Desktop\DockerDemo>docker push hp05/docker_demo
+Using default tag: latest
+The push refers to repository [docker.io/hp05/docker_demo]
+131af3192a8f: Pushed
+d9b6ea8e7d5f: Mounted from library/openjdk
+9cb5eb95298c: Mounted from library/openjdk
+00ef5416d927: Mounted from library/openjdk
+8555e663f65b: Mounted from library/openjdk
+d00da3cd7763: Mounted from library/openjdk
+4e61e63529c2: Mounted from library/openjdk
+799760671c38: Mounted from library/openjdk
+latest: digest: sha256:14d36763331d47f0af76a7f18a85e52532df04fd408d2f2770ed5357682cb627 size: 2007
+
+C:\Users\hp\Desktop\DockerDemo>minikube start
+* minikube v1.23.0 on Microsoft Windows 10 Pro 10.0.19043 Build 19043
+* Using the docker driver based on existing profile
+* Starting control plane node minikube in cluster minikube
+* Pulling base image ...
+* Restarting existing docker container for "minikube" ...
+* Preparing Kubernetes v1.22.1 on Docker 20.10.8 ...
+* Verifying Kubernetes components...
+  - Using image gcr.io/k8s-minikube/storage-provisioner:v5
+* Enabled addons: storage-provisioner, default-storageclass
+* Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+
+C:\Users\hp\Desktop\DockerDemo>kubectl run handson --image hp05/docker_demo
+pod/handson created
+
+C:\Users\hp\Desktop\DockerDemo>kubectl get pods
+NAME        READY   STATUS             RESTARTS   AGE
+handson     1/1     Running            0          101s
+ 
+
+C:\Users\hp\Desktop\DockerDemo>kubectl port-forward handson 9090:8080
+Forwarding from 127.0.0.1:9090 -> 8080
+Forwarding from [::1]:9090 -> 8080
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
